@@ -1,16 +1,23 @@
 <template>
-  <v-container>
-    <v-row>
+<v-container>
+  <v-row>
+    <v-container class="text-center pt-10">
       <h1>Dishes</h1>
-    </v-row>
-    <v-row>
-      <!-- ZATVORENI -->
-      <Dish v-for="(dish, i) in dishes" :key="dish.id" :dish="dishes[i]"/>
-    </v-row>
-    <v-row>
-      <EditDish :dish="openDish"/>
-    </v-row>
-  </v-container>
+    </v-container>
+  </v-row>
+  <div class="text-center">
+    <v-pagination
+      v-model="page"
+      :length="4"
+      @input="next"
+      circle
+    ></v-pagination>
+  </div>
+  <v-row>
+    <Dish v-for="(dish, i) in dishes" :key="dish.id" :dish="dishes[i]"/>
+  </v-row>
+  <EditDish v-if="Object.keys(openDish).length !== 0" :dish="openDish"/>
+</v-container>
 </template>
 
 <script>
@@ -23,16 +30,14 @@ export default {
     Dish,
     EditDish
   },
-  mounted () {
-    console.log(this.openDish)
-  },
   beforeMount () {
     this.getDishes()
   },
   data () {
     return {
       dishes: [],
-      openDish: {}
+      openDish: {},
+      page: 1
     }
   },
   methods: {
@@ -40,6 +45,9 @@ export default {
       const data = await DishService.getDishes()
       this.dishes = data.data.dishes
       console.log(this.dishes)
+    },
+    next (page) {
+      console.log(page)
     }
   }
 }

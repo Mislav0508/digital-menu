@@ -12,7 +12,7 @@
     <v-container>
       <v-row>
         <v-col>
-          {{ dish.Description }}...
+          {{ dish.Description.substring(0,50) }}...
         </v-col>
       </v-row>
     </v-container>

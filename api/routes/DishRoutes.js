@@ -11,7 +11,7 @@ const { getDishes,
 router.get('/dishes', getDishes);
 router.get('/dishes/clear', clearDishes);
 router.get('/dishes/:_id', getDishById);
-router.put('/dishes', updateDish);
+router.put('/dishes/:_id', updateDish);
 router.post('/dishes', createDish);
 router.delete('/dishes/:_id', deleteDish);
 

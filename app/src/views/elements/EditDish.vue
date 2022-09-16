@@ -1,5 +1,6 @@
 <template>
-  <v-container class="d-flex justify-between flex-column">
+  <v-container class="d-flex align-center justify-between flex-column">
+    <h1 class="text-center pt-10">Edit</h1>
     <v-card
     :loading="loading"
     class="mx-auto my-12"
@@ -120,10 +121,10 @@
             <v-btn
               class="mb-5"
               color="red darken-4 white--text"
-              @click="cancel"
+              @click="confirmDelete"
               large
             >
-              Cancel
+              delete
             </v-btn>
             <v-btn
               class="mb-5"
@@ -144,7 +145,7 @@
         :icon="true"
         title="Success"
       >
-        Dish was successfully updated. <v-icon>mdi-checkbox-marked-circle</v-icon>
+        {{ snackbarMsg }} <v-icon>mdi-checkbox-marked-circle</v-icon>
         <template v-slot:action="{ attrs }">
           <v-btn
             text
@@ -156,10 +157,45 @@
         </template>
       </v-snackbar>
     </v-card>
+    <v-col cols="12" sm="4" class="d-flex justify-center align-center">
+      <v-btn  @click="$router.push({ name: 'Dishes' })" large color="indigo darken-1" class="white--text">Back</v-btn>
+    </v-col>
+
+    <v-dialog
+      v-model="deleteAction"
+      width="500"
+    >
+      <v-card>
+        <v-card-text class="pa-12">
+          <h3 >Are you sure you want to delete {{ property.Name }} ?</h3>
+        </v-card-text>
+
+        <v-divider></v-divider>
+
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn
+            color="primary"
+            text
+            @click="deleteAction = false"
+          >
+            Cancel
+          </v-btn>
+          <v-btn
+            color="primary"
+            text
+            @click="deleteDish"
+          >
+            Confirm
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-container>
 </template>
 
 <script>
+import DishService from '@/services/DishService'
 export default {
   props: {
     dish: {
@@ -168,7 +204,9 @@ export default {
   },
   data: () => ({
     loading: false,
-    snackbar: false
+    snackbarMsg: '',
+    snackbar: false,
+    deleteAction: false
   }),
   computed: {
     property: {
@@ -180,16 +218,34 @@ export default {
   methods: {
     async save () {
       this.loading = true
+      this.snackbarMsg = 'Dish was successfully deleted.'
       this.snackbar = true
+
+      const data = await DishService.updateDish({ dish: this.property })
+      console.log(data)
+
       setTimeout(() => {
         this.loading = false
         this.snackbar = false
       }, 2000)
     },
-    cancel () {
-      this.$router.push({
-        name: 'Dishes'
-      })
+    confirmDelete () {
+      this.deleteAction = true
+    },
+    async deleteDish () {
+      this.loading = true
+      this.snackbarMsg = 'Dish was successfully deleted.'
+      this.snackbar = true
+
+      const data = await DishService.deleteDish({ data: { _id: this.property._id } })
+      console.log(data)
+
+      setTimeout(() => {
+        this.loading = false
+        this.snackbar = false
+        this.$router.push({ name: 'Dishes' })
+      }, 2000)
+      this.deleteAction = false
     }
   }
 }
