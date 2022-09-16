@@ -4,21 +4,42 @@
       <h1>Dishes</h1>
     </v-row>
     <v-row>
-      <Dish v-for="(dish, i) in dishes" :key="i"/>
+      <!-- ZATVORENI -->
+      <Dish v-for="(dish, i) in dishes" :key="dish.id" :dish="dishes[i]"/>
+    </v-row>
+    <v-row>
+      <EditDish :dish="openDish"/>
     </v-row>
   </v-container>
 </template>
 
 <script>
+import DishService from '@/services/DishService'
 import Dish from '@/components/Dish.vue'
+import EditDish from './elements/EditDish.vue'
 export default {
   name: 'Dishes',
   components: {
-    Dish
+    Dish,
+    EditDish
+  },
+  mounted () {
+    console.log(this.openDish)
+  },
+  beforeMount () {
+    this.getDishes()
   },
   data () {
     return {
-      dishes: ['1', '2', '3', '4', '5', '6']
+      dishes: [],
+      openDish: {}
+    }
+  },
+  methods: {
+    async getDishes () {
+      const data = await DishService.getDishes()
+      this.dishes = data.data.dishes
+      console.log(this.dishes)
     }
   }
 }
