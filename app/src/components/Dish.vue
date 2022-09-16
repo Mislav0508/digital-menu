@@ -7,7 +7,7 @@
   >
     <template slot="progress">
       <v-progress-linear
-        color="deep-purple"
+        color="indigo darken-1"
         height="10"
         indeterminate
       ></v-progress-linear>
@@ -19,6 +19,7 @@
     <v-text-field v-else 
       class="px-4"
       outlined
+      label="Dish name"
       :value="dishName">
     </v-text-field>
 
@@ -34,13 +35,12 @@
     <v-container v-else>
       <v-textarea
         outlined
-        name="input-7-4"
         label="Description"
         value="The Woodman set to work at once, and so sharp was his axe that the tree was soon chopped nearly through."
       ></v-textarea>
     </v-container>
 
-    <v-card-text>
+    <v-card-text class="py-0">
       <!-- 3: Rating -->
       <v-row class="mx-0">
         <v-rating
@@ -64,7 +64,7 @@
         Price: 50 $
       </div>
 
-      <div v-else class="mt-6 text-subtitle-1 d-flex align-center justify-space-between">
+      <div v-else class="text-subtitle-1 d-flex align-center justify-space-between">
         <v-col cols="12" sm="4">
           Price
         </v-col> 
@@ -88,14 +88,12 @@
     
     <v-card-title v-else class="py-0 text-center">
       <v-col cols="12" sm="12" class="pb-0">
-        Today's availability 
-      </v-col>
-      <v-col cols="12" sm="12" class="pb-0">
         <v-select
           :items="['Item1', 'Item2', 'Item3']"
-          label="Item1"
+          label="Availability"
           solo
           dense
+          clearable
         ></v-select>
       </v-col>
     </v-card-title>    
@@ -104,15 +102,12 @@
     <v-card-title v-if="!editBtn" class="justify-space-between">Category<v-chip class="pr-5">Afternoon and High Tea Menu</v-chip></v-card-title>
 
     <v-card-title v-else class="py-0 text-center">
-      <v-col cols="12" sm="12" class="py-0">
-        Category 
-      </v-col>
       <v-col cols="12" sm="12" class="pb-0">
         <v-select  
           :items="['Category1', 'Category2', 'Category3']"
           solo
           dense
-          label="Category1"
+          label="Category"
         ></v-select>
       </v-col>
     </v-card-title>
@@ -124,7 +119,7 @@
     <!-- 8: Wait time -->
     <v-card-title v-if="!editBtn" class="justify-space-between">Wait time<v-chip class="pr-5">30 mins</v-chip></v-card-title>
     
-    <v-card-title v-else class="text-center py-0">
+    <v-card-title v-else class="text-center pa-0">
       <v-col cols="12" sm="6" class="d-flex flex-column align-center justify-center">
         Sold out
         <v-switch
@@ -148,8 +143,10 @@
       <v-container>
         <v-row v-if="!editBtn" class="d-flex justify-center">
           <v-btn          
+            class="mb-5"
             color="indigo darken-1 white--text"
             @click="edit"
+            large
           >
             Edit
           </v-btn>
@@ -158,8 +155,9 @@
         <v-row v-else class="justify-space-around">
           <v-btn
             class="mb-5"
-          color="red darken-4 white--text"
-          @click="cancel"
+            color="red darken-4 white--text"
+            @click="cancel"
+            large
           >
             Cancel
           </v-btn>
@@ -167,6 +165,7 @@
             class="mb-5"
             color="green darken-1 white--text"
             @click="save"
+            large
           >
             Save
           </v-btn>
@@ -200,7 +199,7 @@
 export default {
   data: () => ({
     loading: false,
-    editBtn: false,
+    editBtn: true,
     snackbar: true,
     switch1: true,
     dishName: 'some name',
