@@ -1,9 +1,9 @@
 <template>
-  <v-container class="d-flex align-center justify-between flex-column">
-    <h1 class="text-center pt-10">Edit</h1>
+  <v-container fluid class="background d-flex align-center justify-between flex-column">
+    <h1 class="text-center pt-10">Edit Dish</h1>
     <v-card
     :loading="loading"
-    class="mx-auto my-12"
+    class="card mx-auto my-12"
     max-width="374"
     >
       <template slot="progress">
@@ -44,11 +44,11 @@
               dense
               half-increments
               readonly
-              size="16"
+              size="20"
             ></v-rating>
           </v-col>
 
-          <v-col cols="2" sm="2" class="grey--text pl-0"><h3>{{ property.Rating }}</h3></v-col>
+          <v-col cols="2" sm="2" class="pl-0"><h3>{{ property.Rating }}</h3></v-col>
 
         </v-row>
         <!-- 4: Price -->
@@ -158,7 +158,7 @@
       </v-snackbar>
     </v-card>
     <v-col cols="12" sm="4" class="d-flex justify-center align-center">
-      <v-btn  @click="$router.push({ name: 'Home' })" large color="indigo darken-1" class="white--text">Back</v-btn>
+      <v-btn  @click="$router.push({ name: 'Home' })" large color="orange lighten-1" class="white--text">Cancel</v-btn>
     </v-col>
 
     <v-dialog

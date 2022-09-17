@@ -1,7 +1,7 @@
 <template>
   <!-- eslint-disable -->
   <v-card
-    class="mx-auto my-12"
+    class="card mx-auto my-12"
     max-width="374"
   >
 
@@ -26,16 +26,16 @@
           dense
           half-increments
           readonly
-          size="16"
+          size="20"
         ></v-rating>
 
-        <div class="grey--text ml-4">
-          {{ dish.Rating }}
+        <div class="ml-4">
+          <h3 class="font-weight-bold">{{ dish.Rating }}</h3>
         </div>
       </v-row>
 
       <!-- 4: Price -->
-      <div class="text-subtitle-1">
+      <div class="font-weight-bold">
         Price: {{ dish.Price }} $
       </div>
 
@@ -61,7 +61,7 @@
         <v-row class="d-flex justify-center">
           <v-btn          
             class="mb-5"
-            color="indigo darken-1 white--text"
+            color="orange lighten-1 white--text"
             @click="edit"
             large
           >
@@ -90,7 +90,7 @@ export default {
   }),
   methods: {
     edit () {
-      var dish = this.dish
+      const dish = this.dish
       // EditDish accepting params as props
       this.$router.push({
         name: 'EditDish',

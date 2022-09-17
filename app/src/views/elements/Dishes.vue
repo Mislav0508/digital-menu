@@ -1,19 +1,6 @@
 <template>
 <v-container>
   <v-row>
-    <v-container class="text-center pt-10">
-      <h1>Dishes</h1>
-    </v-container>
-  </v-row>
-  <div class="text-center">
-    <v-pagination
-      v-model="page"
-      :length="4"
-      @input="next"
-      circle
-    ></v-pagination>
-  </div>
-  <v-row>
     <Dish v-for="(dish, i) in dishes" :key="dish.id" :dish="dishes[i]"/>
   </v-row>
 </v-container>
