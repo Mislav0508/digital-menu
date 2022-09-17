@@ -133,33 +133,15 @@
 
 <script>
 import DishService from '@/services/DishService'
+import inputRules from '@/mixins/inputRules'
 export default {
   name: 'CreateDish',
+  mixins: [inputRules],
   data: () => ({
     loading: false,
     snackbarMsg: '',
     snackbar: false,
     deleteAction: false,
-    nameRules: [
-      v => !!v || 'Name is required',
-      v => v.length <= 50 || 'Name must be less than 50 characters'
-    ],
-    descriptionRules: [
-      v => !!v || 'Description is required',
-      v => v.length <= 200 || 'Name must be less than 200 characters'
-    ],
-    priceRules: [
-      v => !!v || 'Price is required',
-      v => v <= 500 || 'Price must be less than 500',
-      v => v > 0 || 'Price must be more than 0'
-    ],
-    required: [
-      v => !!v || 'Field is required'
-    ],
-    waitTimeRules: [
-      v => !!v || 'Wait time is required',
-      v => v <= 100 || 'Wait time must be less than 100 minutes'
-    ],
     dish: {
       Name: '',
       Description: '',
@@ -187,9 +169,13 @@ export default {
       this.snackbarMsg = 'Dish was created successfully!.'
       this.snackbar = true
 
-      const dish = this.dish
-      const data = await DishService.createDish({ dish: { ...dish, Rating: parseFloat(dish.Rating), Price: parseFloat(dish.Price), WaitTimeMinutes: parseInt(dish.WaitTimeMinutes) } })
-      console.log(data)
+      try {
+        const dish = this.dish
+        const data = await DishService.createDish({ dish: { ...dish, Rating: parseFloat(dish.Rating), Price: parseFloat(dish.Price), WaitTimeMinutes: parseInt(dish.WaitTimeMinutes) } })
+        console.log(data)
+      } catch (error) {
+        console.log(error)
+      }
 
       setTimeout(() => {
         this.loading = false

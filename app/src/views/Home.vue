@@ -1,5 +1,6 @@
 <template>
-  <v-container fluid class="body dark-background" style=" background-color: linear-gradient(to right, rgba(58, 61, 62, 1) 0%, rgba(58, 61, 62, 1) 100%);">
+  <v-container fluid>
+  <v-container v-if="!loading" fluid class="body dark-background" style=" background-color: linear-gradient(to right, rgba(58, 61, 62, 1) 0%, rgba(58, 61, 62, 1) 100%);">
     <v-row class="justify-center pt-10">
       <h1 class="text-center">Menu</h1>
     </v-row>
@@ -48,6 +49,10 @@
       </div>
     </div>
   </v-container>
+  <v-container v-else>
+    <h1 class="text-center">Loading...</h1>
+  </v-container>
+  </v-container>
 </template>
 
 <script>
@@ -63,6 +68,7 @@ export default {
   },
   data () {
     return {
+      loading: true,
       dishes: [],
       searchTerm: '',
       page: 1
@@ -85,13 +91,19 @@ export default {
   },
   methods: {
     async getDishes () {
-      const response = await DishService.getDishes()
-      const dishes = await response.data.dishes
-      const criteriaStrings = dishes.map((x, i) => Object.values(x).toString())
-      this.dishes = dishes.map((x, i) => {
-        return { ...x, strings: criteriaStrings[i] }
-      })
-      console.log(this.dishes)
+      this.loading = true
+      try {
+        const response = await DishService.getDishes()
+        const dishes = await response.data.dishes
+        const criteriaStrings = dishes.map((x, i) => Object.values(x).toString())
+        this.dishes = dishes.map((x, i) => {
+          return { ...x, strings: criteriaStrings[i] }
+        })
+        console.log(this.dishes)
+        this.loading = false
+      } catch (error) {
+        console.log(error)
+      }
     }
   }
 }
@@ -110,7 +122,7 @@ export default {
 body {
   padding: 0;
   margin: 0;
-  height: 100%;
+  min-height: 100vh;
 }
 
 /* .body {
@@ -147,6 +159,7 @@ a:hover {
   display: flex;
   justify-content: center;
   flex-direction: column;
+  height: 100%;
 }
 
 .outer-border {

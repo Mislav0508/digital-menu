@@ -30,4 +30,7 @@ h1 {
   background-color: #b4a8a8 !important;
   border-radius: 1rem !important;
 }
+#app {
+  background-color: #3A3D3E;
+}
 </style>

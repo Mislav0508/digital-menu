@@ -17,6 +17,7 @@
       <!-- 1: Name -->
       <v-text-field
         v-model="property.Name"
+        :rules="nameRules"
         class="pa-4"
         outlined
         label="Dish name">
@@ -26,6 +27,7 @@
       <v-container>
         <v-textarea
           v-model="property.Description"
+          :rules="descriptionRules"
           outlined
           label="Description"
         ></v-textarea>
@@ -59,6 +61,7 @@
           <v-col cols="12" sm="3">
             <v-text-field
               v-model="property.Price"
+              :rules="priceRules"
               dense
               class="pt-4"
               outlined>
@@ -74,6 +77,7 @@
         <v-col cols="12" sm="12" class="pb-0">
           <v-select
             v-model="property.Availability"
+            :rules="required"
             :items="Availability"
             label="Time of day"
             solo
@@ -88,6 +92,7 @@
         <v-col cols="12" sm="12" class="pb-0">
           <v-select
             v-model="property.Category"
+            :rules="required"
             :items="Category"
             solo
             dense
@@ -107,7 +112,7 @@
         <!-- 8: Wait time -->
         <v-col cols="12" sm="6" >
           <v-col cols="12" sm="12" >
-            <v-text-field label="Wait time (mins)" v-model="property.WaitTimeMinutes">
+            <v-text-field label="Wait time (mins)" v-model="property.WaitTimeMinutes" :rules="waitTimeRules">
             </v-text-field>
           </v-col>
         </v-col>
@@ -196,8 +201,10 @@
 
 <script>
 import DishService from '@/services/DishService'
+import inputRules from '@/mixins/inputRules'
 export default {
   name: 'EditDish',
+  mixins: [inputRules],
   props: {
     dish: {
       type: Object
