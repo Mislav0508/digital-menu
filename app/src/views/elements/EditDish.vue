@@ -158,7 +158,7 @@
       </v-snackbar>
     </v-card>
     <v-col cols="12" sm="4" class="d-flex justify-center align-center">
-      <v-btn  @click="$router.push({ name: 'Dishes' })" large color="indigo darken-1" class="white--text">Back</v-btn>
+      <v-btn  @click="$router.push({ name: 'Home' })" large color="indigo darken-1" class="white--text">Back</v-btn>
     </v-col>
 
     <v-dialog

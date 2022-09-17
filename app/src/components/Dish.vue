@@ -91,6 +91,7 @@ export default {
   methods: {
     edit () {
       var dish = this.dish
+      // EditDish accepting params as props
       this.$router.push({
         name: 'EditDish',
         params: { id: this.dish.id, dish: { ...dish, Rating: parseFloat(dish.Rating), Price: parseFloat(dish.Price), WaitTimeMinutes: parseInt(dish.WaitTimeMinutes), SoldOut: parseInt(dish.SoldOut) } }

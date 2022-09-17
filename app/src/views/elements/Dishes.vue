@@ -16,27 +16,22 @@
   <v-row>
     <Dish v-for="(dish, i) in dishes" :key="dish.id" :dish="dishes[i]"/>
   </v-row>
-  <EditDish v-if="Object.keys(openDish).length !== 0" :dish="openDish"/>
 </v-container>
 </template>
 
 <script>
 import DishService from '@/services/DishService'
 import Dish from '@/components/Dish.vue'
-import EditDish from './elements/EditDish.vue'
 export default {
-  name: 'Dishes',
   components: {
-    Dish,
-    EditDish
+    Dish
   },
-  beforeMount () {
+  mounted () {
     this.getDishes()
   },
   data () {
     return {
       dishes: [],
-      openDish: {},
       page: 1
     }
   },

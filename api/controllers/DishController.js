@@ -44,11 +44,9 @@ const createDish = async (req,res) => {
 }
 const deleteDish = async (req,res) => {
   const { _id } = req.body
-  console.log(_id);
   try {
     await db.promise().query(`DELETE FROM digitalmenu.dish
     WHERE _id='${_id}';`)
-
     res.status(StatusCodes.OK).json({msg: "Dish was successfully deleted."});
   } catch (error) {
     res.status(StatusCodes.BAD_REQUEST).json({msg: "Something went wrong"})
