@@ -20,11 +20,9 @@ const login = async (req,res) => {
     }  
   
     const tokenUser = { username, password }
-    console.log(tokenUser);
     const token = jwt.sign(tokenUser, "mysupersecret", {
       expiresIn: "1h",
     });
-    console.log("token", token);
     const oneDay = 1000 * 60 * 60 * 24;
     res.cookie('token', token, {
       httpOnly: false,

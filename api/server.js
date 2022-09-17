@@ -1,4 +1,5 @@
 require('dotenv').config()
+const cookieParser = require("cookie-parser")
 const express = require("express");
 const bodyParser = require("body-parser");
 const DishRouter = require('./routes/DishRoutes');
@@ -8,8 +9,21 @@ const app = express();
 const port = 9000;
 
 // setup middleware
+app.use(cookieParser("mysupersecret"))
 app.use(bodyParser.json());
-app.use(cors());
+
+const corsOptions ={
+    origin:'http://localhost:8081', 
+    credentials:true,           
+    optionSuccessStatus:200
+  }
+app.use(cors({
+origin: function(origin, callback){
+    return callback(null, true);
+},
+optionsSuccessStatus: 200,
+credentials: true
+}));
 
 //
 app.use(DishRouter);
