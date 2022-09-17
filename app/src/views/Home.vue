@@ -1,5 +1,6 @@
 <template>
   <v-container fluid>
+    <v-icon class="icon" color="orange lighten-1" x-large @click="$router.push({ name: 'Login' })">{{ icons.mdiAccount }}</v-icon>
   <v-container v-if="!loading" fluid class="body dark-background" style=" background-color: linear-gradient(to right, rgba(58, 61, 62, 1) 0%, rgba(58, 61, 62, 1) 100%);">
     <v-row class="justify-center pt-10">
       <h1 class="text-center">Menu</h1>
@@ -58,6 +59,7 @@
 <script>
 import DishService from '@/services/DishService'
 import Dish from '@/components/Dish.vue'
+import { mdiAccount } from '@mdi/js'
 export default {
   name: 'Home',
   components: {
@@ -71,7 +73,9 @@ export default {
       loading: true,
       dishes: [],
       searchTerm: '',
-      page: 1
+      icons: {
+        mdiAccount
+      }
     }
   },
   computed: {
@@ -104,6 +108,9 @@ export default {
       } catch (error) {
         console.log(error)
       }
+    },
+    async login () {
+      //
     }
   }
 }
@@ -141,6 +148,14 @@ body {
     background-repeat: no-repeat !important;
     background-position: 50% -31vh!important;
 	}
+}
+
+.icon {
+  position:fixed !important;
+  top:2rem;
+  right: 2rem;
+  scale: 1.5;
+  cursor: pointer;
 }
 
 .skintone-text {

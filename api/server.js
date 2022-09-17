@@ -2,6 +2,7 @@ require('dotenv').config()
 const express = require("express");
 const bodyParser = require("body-parser");
 const DishRouter = require('./routes/DishRoutes');
+const AuthRouter = require('./routes/AuthRoutes');
 const cors = require("cors")
 const app = express();
 const port = 9000;
@@ -12,6 +13,7 @@ app.use(cors());
 
 //
 app.use(DishRouter);
+app.use(AuthRouter);
 
 //
 app.listen(port, () => {
