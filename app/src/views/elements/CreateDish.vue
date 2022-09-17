@@ -14,51 +14,32 @@
         ></v-progress-linear>
       </template>
 
-      <!-- 1: Name -->
       <v-text-field
-        v-model="Name"
+        v-model="dish.Name"
+        :rules="nameRules"
         class="pa-4"
         outlined
         label="Dish name">
       </v-text-field>
 
-      <!-- 2: Description -->
       <v-container>
         <v-textarea
-          v-model="Description"
+          v-model="dish.Description"
+          :rules="descriptionRules"
           outlined
           label="Description"
         ></v-textarea>
       </v-container>
 
-      <!-- 3: Rating -->
       <v-container>
-        <v-row class="d-flex align-center justify-center">
-          <v-col cols="2" sm="2" class="d-flex align-center justify-center">
-            <h3>Rating</h3>
-          </v-col>
-          <v-col cols="6" sm="6" class="d-flex align-center justify-center">
-            <v-rating
-              v-model="Rating"
-              color="amber"
-              dense
-              half-increments
-              readonly
-              size="20"
-            ></v-rating>
-          </v-col>
-
-          <v-col cols="2" sm="2" class="pl-0"><h3>{{ Rating }}</h3></v-col>
-
-        </v-row>
-        <!-- 4: Price -->
         <v-row class="d-flex align-center justify-start">
           <v-col cols="12" sm="4" class="pt-0 pl-8">
             <h3>Price €</h3>
           </v-col>
-          <v-col cols="12" sm="3">
+          <v-col cols="12" sm="4">
             <v-text-field
-              v-model="Price"
+              v-model="dish.Price"
+              :rules="priceRules"
               dense
               class="pt-4"
               outlined>
@@ -69,26 +50,26 @@
 
       <v-divider class="mx-4"></v-divider>
 
-      <!-- 5: Availability -->
       <v-card-title class="py-0 text-center">
         <v-col cols="12" sm="12" class="pb-0">
           <v-select
-            v-model="Availability"
-            :items="['Item1', 'Item2', 'Item3']"
+            v-model="dish.Availability"
+            :items="Availability"
+            :rules="required"
             label="Time of day"
             solo
             dense
-            clearable
+            required
           ></v-select>
         </v-col>
       </v-card-title>
 
-      <!-- 6: Category -->
       <v-card-title class="py-0 text-center">
         <v-col cols="12" sm="12" class="pb-0">
           <v-select
-            v-model="Category"
-            :items="['Category1', 'Category2', 'Category3']"
+            v-model="dish.Category"
+            :items="Category"
+            :rules="required"
             solo
             dense
             label="Category"
@@ -97,26 +78,22 @@
       </v-card-title>
 
       <v-card-title class="text-center pa-0">
-        <!-- 7: Sold out -->
         <v-col cols="12" sm="6" class="d-flex flex-column align-center justify-center">
           <v-checkbox
-            v-model="SoldOut"
+            v-model="dish.SoldOut"
             label="Sold out"
           ></v-checkbox>
         </v-col>
-        <!-- 8: Wait time -->
         <v-col cols="12" sm="6" >
           <v-col cols="12" sm="12" >
-            <v-text-field label="Wait time (mins)" v-model="WaitTimeMinutes">
+            <v-text-field label="Wait time (mins)" v-model="dish.WaitTimeMinutes" :rules="waitTimeRules">
             </v-text-field>
           </v-col>
         </v-col>
       </v-card-title>
 
       <v-card-actions class="justify-center">
-
         <v-container>
-
           <v-row class="justify-space-around">
             <v-btn
               class="mb-5"
@@ -124,11 +101,10 @@
               @click="save"
               large
             >
-              Save
+              Create
             </v-btn>
           </v-row>
         </v-container>
-
       </v-card-actions>
 
       <v-snackbar
@@ -158,29 +134,61 @@
 <script>
 import DishService from '@/services/DishService'
 export default {
+  name: 'CreateDish',
   data: () => ({
     loading: false,
     snackbarMsg: '',
     snackbar: false,
     deleteAction: false,
+    nameRules: [
+      v => !!v || 'Name is required',
+      v => v.length <= 50 || 'Name must be less than 50 characters'
+    ],
+    descriptionRules: [
+      v => !!v || 'Description is required',
+      v => v.length <= 200 || 'Name must be less than 200 characters'
+    ],
+    priceRules: [
+      v => !!v || 'Price is required',
+      v => v <= 500 || 'Price must be less than 500',
+      v => v > 0 || 'Price must be more than 0'
+    ],
+    required: [
+      v => !!v || 'Field is required'
+    ],
+    waitTimeRules: [
+      v => !!v || 'Wait time is required',
+      v => v <= 100 || 'Wait time must be less than 100 minutes'
+    ],
     dish: {
       Name: '',
       Description: '',
       Rating: 0,
       Price: 0,
-      Availability: 1,
-      Category: 1,
+      Availability: '',
+      Category: '',
       SoldOut: 0,
       WaitTimeMinutes: 0
-    }
+    },
+    Availability: [],
+    Category: []
   }),
+  mounted () {
+    this.getDropdowns()
+  },
   methods: {
+    async getDropdowns () {
+      const data = await DishService.getDropdowns()
+      this.Availability = data.data.dropdowns.Availability
+      this.Category = data.data.dropdowns.Category
+    },
     async save () {
       this.loading = true
-      this.snackbarMsg = 'Dish was successfully deleted.'
+      this.snackbarMsg = 'Dish was created successfully!.'
       this.snackbar = true
 
-      const data = await DishService.createDish({ dish: this.dish })
+      const dish = this.dish
+      const data = await DishService.createDish({ dish: { ...dish, Rating: parseFloat(dish.Rating), Price: parseFloat(dish.Price), WaitTimeMinutes: parseInt(dish.WaitTimeMinutes) } })
       console.log(data)
 
       setTimeout(() => {

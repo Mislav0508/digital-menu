@@ -197,15 +197,14 @@
 <script>
 import DishService from '@/services/DishService'
 export default {
+  name: 'EditDish',
   props: {
     dish: {
       type: Object
     }
   },
-  async mounted () {
-    const data = await DishService.getDropdowns()
-    this.Availability = data.data.dropdowns.Availability
-    this.Category = data.data.dropdowns.Category
+  mounted () {
+    this.getDropdowns()
   },
   data: () => ({
     loading: false,
@@ -223,6 +222,11 @@ export default {
     }
   },
   methods: {
+    async getDropdowns () {
+      const data = await DishService.getDropdowns()
+      this.Availability = data.data.dropdowns.Availability
+      this.Category = data.data.dropdowns.Category
+    },
     async save () {
       this.loading = true
       this.snackbarMsg = 'Dish was successfully deleted.'

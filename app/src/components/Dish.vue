@@ -44,16 +44,16 @@
     <v-divider class="mx-4"></v-divider>
 
     <!-- 5: Availability -->
-    <v-card-title class="justify-space-between">Today's availability <v-chip class="pr-5">Breakfast</v-chip></v-card-title>  
+    <v-card-title class="justify-space-between">Today's availability <v-chip class="pr-5">{{ dish.Availability }}</v-chip></v-card-title>  
     
     <!-- 6: Category -->
-    <v-card-title class="justify-space-between">Category<v-chip class="pr-5">Afternoon and High Tea Menu</v-chip></v-card-title>
+    <v-card-title class="justify-space-between">Category<v-chip class="pr-5">{{ dish.Category }}</v-chip></v-card-title>
     
     <!-- 7: Sold out -->
-    <v-card-title class="justify-space-between">Sold out<v-chip class="pr-5">No</v-chip></v-card-title>
+    <v-card-title class="justify-space-between">Sold out<v-chip class="pr-5">{{ dish.SoldOut === 1 ? 'Yes' : 'No' }}</v-chip></v-card-title>
     
     <!-- 8: Wait time -->
-    <v-card-title class="justify-space-between">Wait time<v-chip class="pr-5">30 mins</v-chip></v-card-title>
+    <v-card-title class="justify-space-between">Wait time<v-chip class="pr-5">{{ dish.WaitTimeMinutes }} mins</v-chip></v-card-title>
 
     <v-card-actions class="justify-center">
       
@@ -94,7 +94,7 @@ export default {
       // EditDish accepting params as props
       this.$router.push({
         name: 'EditDish',
-        params: { id: this.dish.id, dish: { ...dish, Rating: parseFloat(dish.Rating), Price: parseFloat(dish.Price), WaitTimeMinutes: parseInt(dish.WaitTimeMinutes), SoldOut: parseInt(dish.SoldOut) } }
+        params: { id: this.dish.id, dish: { ...dish, Rating: parseFloat(dish.Rating), Price: parseFloat(dish.Price), WaitTimeMinutes: parseInt(dish.WaitTimeMinutes) } }
       })
     }
   }

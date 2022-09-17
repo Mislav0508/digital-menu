@@ -20,7 +20,7 @@ export default {
 
 .background {
   background-color: #3A3D3E;
-  font-family: 'Nunito', sans-serif;
+  font-family: 'Nunito', sans-serif !important;
 }
 h1 {
   font-size: 3rem;

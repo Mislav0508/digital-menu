@@ -1,6 +1,6 @@
 const db = require("../db/db")
 const { StatusCodes } = require('http-status-codes');
-const { uuid } = require("uuidv4");
+const { v4: uuid4 } = require("uuid");
 
 const getDishes = async (req,res) => {
   try {
@@ -36,7 +36,7 @@ const updateDish = async (req,res) => {
     Category = '${dish.Category}',
     Availability = '${dish.Availability}',
     WaitTimeMinutes = ${dish.WaitTimeMinutes},
-    SoldOut = ${dish.SoldOut},
+    SoldOut = ${!dish.SoldOut ? 0 : 1},
     Changed = '${Changed}'
     WHERE _id='${dish._id}';`)
     console.log(dish);
@@ -48,7 +48,27 @@ const updateDish = async (req,res) => {
 }
 
 const createDish = async (req,res) => {
-  res.send("create dish")
+  const { dish } = req.body
+  const _id = uuid4()
+  const Created = new Date().toISOString().slice(0, 19).replace('T', ' ');
+  console.log(dish,_id,Created);
+  try {
+    await db.promise().query(`INSERT INTO dish 
+    (_id, Name, Description, Price, Category, Availability, WaitTimeMinutes, SoldOut, Created)
+    VALUES 
+    ('${_id}', 
+    '${dish.Name}',
+    '${dish.Description}',
+    ${parseFloat(dish.Price).toFixed(2)}, 
+    '${dish.Category}', 
+    '${dish.Availability}',
+    ${Math.round(parseFloat(dish.WaitTimeMinutes))},
+    ${dish.SoldOut ? 1 : 0}, 
+    '${Created}');`)
+    res.send({dish, _id})
+  } catch (error) {
+    res.status(StatusCodes.BAD_REQUEST).json({msg: "Something went wrong"})
+  }
 }
 
 const deleteDish = async (req,res) => {

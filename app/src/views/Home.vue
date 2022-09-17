@@ -1,22 +1,31 @@
 <template>
   <v-container fluid class="body dark-background" style=" background-color: linear-gradient(to right, rgba(58, 61, 62, 1) 0%, rgba(58, 61, 62, 1) 100%);">
-    <v-row class="justify-center py-15">
+    <v-row class="justify-center pt-10">
       <h1 class="text-center">Menu</h1>
     </v-row>
-    <v-row class="justify-center py-15">
-      <v-col cols="12" sm="2">
-        <v-text-field
-          label="Search"
-          v-model="searchTerm"
-          append-icon="mdi-magnify"
-          class="search-field"
-          color="white"
-        ></v-text-field>
-      </v-col>
-      <v-col cols="12" sm="12" class="d-flex justify-space-around">
-        <v-btn v-for="(category, i) in categories" :key="i">
+    <v-row class="justify-center pb-5">
+      <v-col cols="12" sm="12" class="d-flex justify-space-around flex-wrap">
+        <v-btn class="my-5 white--text" v-for="(category, i) in categories" :key="i" @click="searchTerm = category" color="#b4a8a8">
           {{ category }}
         </v-btn>
+      </v-col>
+      <v-col cols="12" sm="12" class="d-flex justify-space-around flex-wrap">
+        <v-btn class="my-5" v-for="(item, i) in availability" :key="i" @click="searchTerm = item" color="warning">
+          {{ item }}
+        </v-btn>
+      </v-col>
+      <v-col cols="12" sm="12" md="8" lg="6" xl="3">
+        <v-card class="px-10 pt-2 d-flex align-center justify-space-between">
+          <v-text-field
+            label="Search"
+            v-model="searchTerm"
+            append-icon="mdi-magnify"
+            class="search-field"
+            color="black"
+            clearable
+          ></v-text-field>
+          <v-btn class="ml-4 white--text" color="secondary" @click="$router.push({ name: 'CreateDish' })">add dish</v-btn>
+        </v-card>
       </v-col>
     </v-row>
     <div class="outer-border">
@@ -45,17 +54,12 @@
 import DishService from '@/services/DishService'
 import Dish from '@/components/Dish.vue'
 export default {
+  name: 'Home',
   components: {
     Dish
   },
   mounted () {
     this.getDishes()
-    // setTimeout(() => {
-    //   const dishes = this.dishes.map((x, i) => {
-    //     return { ...x, strings: this.criteriaStrings[i] }
-    //   })
-    //   this.dishes = dishes
-    // }, 2000)
   },
   data () {
     return {
@@ -74,6 +78,9 @@ export default {
     },
     categories () {
       return [...new Set(this.dishes.map(x => x.Category))]
+    },
+    availability () {
+      return [...new Set(this.dishes.map(x => x.Availability))]
     }
   },
   methods: {
@@ -124,34 +131,8 @@ body {
 	}
 }
 
-.countach {
-	font-family: countach,sans-serif;
-	font-weight: 400;
-	font-style: normal;
-}
-
-.tilda-petite {
-	font-family: tilda-petite,sans-serif;
-	font-weight: 400;
-	font-style: normal;
-}
-
-.montserrat {
-	font-family: montserrat, sans-serif;
-	font-weight: 300;
-	font-style: normal;
-}
-
 .skintone-text {
 	color: var(--skintone-color);
-}
-
-.dark-text {
-	color: var(--dark-color);
-}
-
-.white-text {
-	color: #fff;
 }
 
 a:hover {
@@ -201,8 +182,8 @@ a:hover {
 /* Decorations */
 .corner-decoration {
 	position: absolute;
-    width: 3em;
-    margin: -3px;
+  width: 3em;
+  margin: -3px;
 }
 
 @media (min-width: 768px) {
