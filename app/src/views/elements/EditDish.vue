@@ -184,7 +184,7 @@
             text
             @click="deleteAction = false"
           >
-            Cancel
+            Back
           </v-btn>
           <v-btn
             color="primary"

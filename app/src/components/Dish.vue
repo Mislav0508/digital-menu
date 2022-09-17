@@ -94,7 +94,7 @@ export default {
       // EditDish accepting params as props
       this.$router.push({
         name: 'EditDish',
-        params: { id: this.dish.id, dish: { ...dish, Rating: parseFloat(dish.Rating), Price: parseFloat(dish.Price), WaitTimeMinutes: parseInt(dish.WaitTimeMinutes) } }
+        params: { id: this.dish.IDDish, dish: { ...dish, Rating: parseFloat(dish.Rating), Price: parseFloat(dish.Price), WaitTimeMinutes: parseInt(dish.WaitTimeMinutes) } }
       })
     }
   }

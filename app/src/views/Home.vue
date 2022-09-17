@@ -6,7 +6,7 @@
     <v-row class="justify-center pt-10">
       <h1 class="text-center">Menu</h1>
     </v-row>
-    <v-row class="justify-center pb-5">
+    <v-row class="justify-center pb-15">
       <v-col cols="12" sm="12" class="d-flex justify-space-around flex-wrap">
         <v-btn class="my-5 white--text" v-for="(category, i) in categories" :key="i" @click="searchTerm = category" color="#b4a8a8">
           {{ category }}
@@ -27,7 +27,9 @@
             color="black"
             clearable
           ></v-text-field>
-          <v-btn v-if="$store.state.user" class="ml-4 white--text" color="secondary" @click="$router.push({ name: 'CreateDish' })">add dish</v-btn>
+          <v-btn v-if="$store.state.user" class="ml-4 white--text" color="success" @click="$router.push({ name: 'CreateDish' })">add dish
+            <v-icon class="ml-4">{{ icons.mdiPlusCircle }}</v-icon>
+          </v-btn>
         </v-card>
       </v-col>
     </v-row>
@@ -60,7 +62,7 @@
 <script>
 import DishService from '@/services/DishService'
 import Dish from '@/components/Dish.vue'
-import { mdiAccount } from '@mdi/js'
+import { mdiAccount, mdiPlusCircle } from '@mdi/js'
 import AuthService from '@/services/AuthService'
 export default {
   name: 'Home',
@@ -76,7 +78,8 @@ export default {
       dishes: [],
       searchTerm: '',
       icons: {
-        mdiAccount
+        mdiAccount,
+        mdiPlusCircle
       }
     }
   },
