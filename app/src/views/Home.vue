@@ -14,7 +14,11 @@
           <img class="vertical-decoration bottom" src="https://i.ibb.co/JRTK9z4/horizontally-centered-vertical-decoration.png"/>
 
           <!-- Page Content -->
-          <Dishes class="py-15"/>
+          <v-container class="py-15 my-10">
+            <v-row>
+              <Dish v-for="(dish, i) in dishes" :key="dish.id" :dish="dishes[i]"/>
+            </v-row>
+          </v-container>
         </div>
       </div>
     </div>
@@ -22,15 +26,29 @@
 </template>
 
 <script>
-import Dishes from '@/views/elements/Dishes.vue'
-// import EditDish from '@/views/elements/EditDish.vue'
+import DishService from '@/services/DishService'
+import Dish from '@/components/Dish.vue'
 export default {
   components: {
-    Dishes
+    Dish
+  },
+  mounted () {
+    this.getDishes()
   },
   data () {
     return {
-      //
+      dishes: [],
+      page: 1
+    }
+  },
+  methods: {
+    async getDishes () {
+      const data = await DishService.getDishes()
+      this.dishes = data.data.dishes
+      console.log(this.dishes)
+    },
+    next (page) {
+      console.log(page)
     }
   }
 }

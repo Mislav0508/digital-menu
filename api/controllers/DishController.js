@@ -10,14 +10,18 @@ const getDishes = async (req,res) => {
     res.status(StatusCodes.BAD_REQUEST).json({msg: "Something went wrong"})
   }
 }
-const clearDishes = async (req,res) => {
-  res.status(StatusCodes.OK).json({dishes: []});
+
+const getDropdowns = async (req,res) => {
+  const [dropdowns] = await db.promise().query('SELECT DISTINCT Category, Availability FROM dish;')
+  const Availability = [...new Set(dropdowns.map(x => {
+    return x.Availability
+  }))]
+  const Category = [...new Set(dropdowns.map(x => {
+    return x.Category
+  }))]
+  res.status(StatusCodes.OK).json({dropdowns: { Availability, Category}});
 }
-const getDishById = async (req,res) => {
-  const dish = _dishes.find(x => x._id === req.params._id)
-  console.log(dish);
-  res.status(StatusCodes.OK).json({dishes: dish ? dish : null});
-}
+
 const updateDish = async (req,res) => {
   const { dish } = req.body
   const Changed = new Date().toISOString().slice(0, 19).replace('T', ' ');
@@ -26,8 +30,8 @@ const updateDish = async (req,res) => {
     SET Name = '${dish.Name}',
     Description = '${dish.Description}',
     Price = ${dish.Price},
-    CategoryID = ${dish.CategoryID},
-    AvailabilityID = ${dish.AvailabilityID},
+    Category = '${dish.Category}',
+    Availability = '${dish.Availability}',
     WaitTimeMinutes = ${dish.WaitTimeMinutes},
     SoldOut = ${dish.SoldOut},
     Changed = '${Changed}'
@@ -39,9 +43,11 @@ const updateDish = async (req,res) => {
     res.status(StatusCodes.BAD_REQUEST).json({msg: "Something went wrong"})
   }  
 }
+
 const createDish = async (req,res) => {
   res.send("create dish")
 }
+
 const deleteDish = async (req,res) => {
   const { _id } = req.body
   try {
@@ -55,8 +61,7 @@ const deleteDish = async (req,res) => {
 
 module.exports = {
   getDishes,
-  clearDishes,
-  getDishById,
+  getDropdowns,
   updateDish,
   createDish,
   deleteDish

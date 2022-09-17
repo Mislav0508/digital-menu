@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 import Login from '../views/Login.vue'
 import Home from '@/views/Home.vue'
 import EditDish from '@/views/elements/EditDish.vue'
+import CreateDish from '@/views/elements/CreateDish.vue'
 
 Vue.use(VueRouter)
 
@@ -22,6 +23,11 @@ const routes = [
     name: 'EditDish',
     component: EditDish,
     props: true
+  },
+  {
+    path: '/create-dish',
+    name: 'CreateDish',
+    component: CreateDish
   }
 ]
 

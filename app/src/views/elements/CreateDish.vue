@@ -1,6 +1,6 @@
 <template>
   <v-container fluid class="background d-flex align-center justify-between flex-column">
-    <h1 class="text-center pt-10">Edit Dish</h1>
+    <h1 class="text-center pt-10">Create Dish</h1>
     <v-card
     :loading="loading"
     class="card mx-auto my-12"
@@ -16,7 +16,7 @@
 
       <!-- 1: Name -->
       <v-text-field
-        v-model="property.Name"
+        v-model="Name"
         class="pa-4"
         outlined
         label="Dish name">
@@ -25,7 +25,7 @@
       <!-- 2: Description -->
       <v-container>
         <v-textarea
-          v-model="property.Description"
+          v-model="Description"
           outlined
           label="Description"
         ></v-textarea>
@@ -39,7 +39,7 @@
           </v-col>
           <v-col cols="6" sm="6" class="d-flex align-center justify-center">
             <v-rating
-              v-model="property.Rating"
+              v-model="Rating"
               color="amber"
               dense
               half-increments
@@ -48,7 +48,7 @@
             ></v-rating>
           </v-col>
 
-          <v-col cols="2" sm="2" class="pl-0"><h3>{{ property.Rating }}</h3></v-col>
+          <v-col cols="2" sm="2" class="pl-0"><h3>{{ Rating }}</h3></v-col>
 
         </v-row>
         <!-- 4: Price -->
@@ -58,7 +58,7 @@
           </v-col>
           <v-col cols="12" sm="3">
             <v-text-field
-              v-model="property.Price"
+              v-model="Price"
               dense
               class="pt-4"
               outlined>
@@ -73,8 +73,8 @@
       <v-card-title class="py-0 text-center">
         <v-col cols="12" sm="12" class="pb-0">
           <v-select
-            v-model="property.Availability"
-            :items="Availability"
+            v-model="Availability"
+            :items="['Item1', 'Item2', 'Item3']"
             label="Time of day"
             solo
             dense
@@ -87,8 +87,8 @@
       <v-card-title class="py-0 text-center">
         <v-col cols="12" sm="12" class="pb-0">
           <v-select
-            v-model="property.Category"
-            :items="Category"
+            v-model="Category"
+            :items="['Category1', 'Category2', 'Category3']"
             solo
             dense
             label="Category"
@@ -100,14 +100,14 @@
         <!-- 7: Sold out -->
         <v-col cols="12" sm="6" class="d-flex flex-column align-center justify-center">
           <v-checkbox
-            v-model="property.SoldOut"
+            v-model="SoldOut"
             label="Sold out"
           ></v-checkbox>
         </v-col>
         <!-- 8: Wait time -->
         <v-col cols="12" sm="6" >
           <v-col cols="12" sm="12" >
-            <v-text-field label="Wait time (mins)" v-model="property.WaitTimeMinutes">
+            <v-text-field label="Wait time (mins)" v-model="WaitTimeMinutes">
             </v-text-field>
           </v-col>
         </v-col>
@@ -118,14 +118,6 @@
         <v-container>
 
           <v-row class="justify-space-around">
-            <v-btn
-              class="mb-5"
-              color="red darken-4 white--text"
-              @click="confirmDelete"
-              large
-            >
-              delete
-            </v-btn>
             <v-btn
               class="mb-5"
               color="green darken-1 white--text"
@@ -160,99 +152,41 @@
     <v-col cols="12" sm="4" class="d-flex justify-center align-center">
       <v-btn  @click="$router.push({ name: 'Home' })" large color="orange lighten-1" class="white--text">Cancel</v-btn>
     </v-col>
-
-    <v-dialog
-      v-model="deleteAction"
-      width="500"
-    >
-      <v-card>
-        <v-card-text class="pa-12">
-          <h3 >Are you sure you want to delete {{ property.Name }} ?</h3>
-        </v-card-text>
-
-        <v-divider></v-divider>
-
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn
-            color="primary"
-            text
-            @click="deleteAction = false"
-          >
-            Cancel
-          </v-btn>
-          <v-btn
-            color="primary"
-            text
-            @click="deleteDish"
-          >
-            Confirm
-          </v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
-  </v-container>
+</v-container>
 </template>
 
 <script>
 import DishService from '@/services/DishService'
 export default {
-  props: {
-    dish: {
-      type: Object
-    }
-  },
-  async mounted () {
-    const data = await DishService.getDropdowns()
-    this.Availability = data.data.dropdowns.Availability
-    this.Category = data.data.dropdowns.Category
-  },
   data: () => ({
     loading: false,
     snackbarMsg: '',
     snackbar: false,
     deleteAction: false,
-    Availability: [],
-    Category: []
-  }),
-  computed: {
-    property: {
-      get () {
-        return this.dish
-      }
+    dish: {
+      Name: '',
+      Description: '',
+      Rating: 0,
+      Price: 0,
+      Availability: 1,
+      Category: 1,
+      SoldOut: 0,
+      WaitTimeMinutes: 0
     }
-  },
+  }),
   methods: {
     async save () {
       this.loading = true
       this.snackbarMsg = 'Dish was successfully deleted.'
       this.snackbar = true
 
-      const data = await DishService.updateDish({ dish: this.property })
+      const data = await DishService.createDish({ dish: this.dish })
       console.log(data)
 
       setTimeout(() => {
         this.loading = false
         this.snackbar = false
       }, 2000)
-    },
-    confirmDelete () {
-      this.deleteAction = true
-    },
-    async deleteDish () {
-      this.loading = true
-      this.snackbarMsg = 'Dish was created successfully!'
-      this.snackbar = true
-
-      const data = await DishService.deleteDish({ data: { _id: this.property._id } })
-      console.log(data)
-
-      setTimeout(() => {
-        this.loading = false
-        this.snackbar = false
-        this.$router.push({ name: 'Dishes' })
-      }, 2000)
-      this.deleteAction = false
     }
   }
 }

@@ -2,8 +2,12 @@ import Api from './Api'
 
 export default {
 
-  getDishes (data) {
-    return Api().get('dishes', data)
+  getDishes () {
+    return Api().get('dishes')
+  },
+
+  getDropdowns () {
+    return Api().get('dishes/dropdowns')
   },
 
   updateDish (data) {
@@ -12,6 +16,10 @@ export default {
 
   deleteDish (data) {
     return Api().delete('dishes/:_id', data)
+  },
+
+  createDish (data) {
+    return Api().post('dishes', data)
   }
 
 }
