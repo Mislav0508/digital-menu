@@ -9,7 +9,7 @@ Vue.use(VueRouter)
 
 const routes = [
   {
-    path: '/login',
+    path: '/',
     name: 'Login',
     component: Login
   },
@@ -28,9 +28,13 @@ const routes = [
     path: '/create-dish',
     name: 'CreateDish',
     component: CreateDish
+  },
+  {
+    path: '*',
+    redirect: { name: 'Login' }
   }
 ]
-
+/* eslint-disable */
 const router = new VueRouter({
   mode: 'history',
   base: process.env.BASE_URL,

@@ -16,7 +16,7 @@
               <v-form @keydown.native.enter="attemptLogin">
                 <v-text-field
                   :loading="loading"
-                  v-on:keyup="(error = null)"
+                  v-on:keyup="(error = null), (success = null)"
                   autocomplete="on"
                   name="username"
                   v-model="username"
@@ -29,7 +29,7 @@
 
                 <v-text-field
                   :loading="loading"
-                  v-on:keyup="(error = null)"
+                  v-on:keyup="(error = null), (success = null)"
                   name="password"
                   autocomplete="new-password"
                   v-model="password"
@@ -86,8 +86,8 @@ export default {
   components: {},
   data () {
     return {
-      username: '',
-      password: '',
+      username: 'test',
+      password: '1234',
       error: null,
       loading: false,
       loader: null,
@@ -102,13 +102,17 @@ export default {
   methods: {
     attemptLogin: async function () {
       try {
-        await AuthService.login({ username: this.username, password: this.password })
+        const data = await AuthService.login({ username: this.username, password: this.password })
+        const user = await data.data.user
+        await this.$store.dispatch('setToken', this.$cookies.get('token'))
+        await this.$store.dispatch('setUser', user.username)
+        this.$router.push({
+          name: 'Home'
+        })
       } catch (error) {
         console.log(error)
+        this.error = error.response.statusText
       }
-      // this.$router.push({
-      //   name: 'Home'
-      // })
     }
   }
 }

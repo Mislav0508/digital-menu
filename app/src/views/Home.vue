@@ -1,6 +1,7 @@
 <template>
   <v-container fluid>
-    <v-icon class="icon" color="orange lighten-1" x-large @click="$router.push({ name: 'Login' })">{{ icons.mdiAccount }}</v-icon>
+    <v-icon v-if="!$store.state.user" class="icon" color="orange lighten-1" x-large @click="$router.push({ name: 'Login' })">{{ icons.mdiAccount }}</v-icon>
+    <v-icon v-else class="icon" color="orange lighten-1" x-large @click="logout()">mdi-logout</v-icon>
   <v-container v-if="!loading" fluid class="body dark-background" style=" background-color: linear-gradient(to right, rgba(58, 61, 62, 1) 0%, rgba(58, 61, 62, 1) 100%);">
     <v-row class="justify-center pt-10">
       <h1 class="text-center">Menu</h1>
@@ -26,7 +27,7 @@
             color="black"
             clearable
           ></v-text-field>
-          <v-btn class="ml-4 white--text" color="secondary" @click="$router.push({ name: 'CreateDish' })">add dish</v-btn>
+          <v-btn v-if="$store.state.user" class="ml-4 white--text" color="secondary" @click="$router.push({ name: 'CreateDish' })">add dish</v-btn>
         </v-card>
       </v-col>
     </v-row>
@@ -60,6 +61,7 @@
 import DishService from '@/services/DishService'
 import Dish from '@/components/Dish.vue'
 import { mdiAccount } from '@mdi/js'
+import AuthService from '@/services/AuthService'
 export default {
   name: 'Home',
   components: {
@@ -109,8 +111,14 @@ export default {
         console.log(error)
       }
     },
-    async login () {
-      //
+    async logout () {
+      try {
+        const response = await AuthService.logout()
+        console.log(response)
+        await this.$store.dispatch('logOut')
+      } catch (error) {
+        console.log(error)
+      }
     }
   }
 }
@@ -151,7 +159,7 @@ body {
 }
 
 .icon {
-  position:fixed !important;
+  position:absolute !important;
   top:2rem;
   right: 2rem;
   scale: 1.5;

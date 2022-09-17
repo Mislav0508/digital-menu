@@ -7,7 +7,7 @@ export default {
   },
 
   logout () {
-    return Api().get('logout')
+    return Api().get('logout', { withCredentials: true })
   }
 
 }

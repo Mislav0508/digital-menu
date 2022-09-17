@@ -55,7 +55,7 @@
     <!-- 8: Wait time -->
     <v-card-title class="justify-space-between">Wait time<v-chip class="pr-5">{{ dish.WaitTimeMinutes }} mins</v-chip></v-card-title>
 
-    <v-card-actions class="justify-center">
+    <v-card-actions v-if="$store.state.user" class="justify-center">
       
       <v-container>
         <v-row class="d-flex justify-center">

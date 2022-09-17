@@ -38,10 +38,17 @@ const login = async (req,res) => {
 }
 
 const logout = async (req,res) => {
-  console.log("logout");
+  try {
+    console.log(req.cookies);
+    res.cookie('token', 'logout', {
+      httpOnly: true,
+      expires: new Date(Date.now() + 100)
+    });
+    res.status(StatusCodes.OK).json({ msg: 'user logged out!' });
+  } catch (error) {
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).send({msg: error});
+  }
 }
- 
-
 
 module.exports = {
   login,
