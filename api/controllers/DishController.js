@@ -4,7 +4,10 @@ const { uuid } = require("uuidv4");
 
 const getDishes = async (req,res) => {
   try {
-    const [dishes] = await db.promise().query(`SELECT * FROM dish;`)
+    let [dishes] = await db.promise().query(`SELECT * FROM dish;`)
+    dishes = dishes.map((x) => {
+      return { ...x, strings: '' }
+    })
     res.status(StatusCodes.OK).json({dishes});
   } catch (error) {
     res.status(StatusCodes.BAD_REQUEST).json({msg: "Something went wrong"})

@@ -3,6 +3,22 @@
     <v-row class="justify-center py-15">
       <h1 class="text-center">Menu</h1>
     </v-row>
+    <v-row class="justify-center py-15">
+      <v-col cols="12" sm="2">
+        <v-text-field
+          label="Search"
+          v-model="searchTerm"
+          append-icon="mdi-magnify"
+          class="search-field"
+          color="white"
+        ></v-text-field>
+      </v-col>
+      <v-col cols="12" sm="12" class="d-flex justify-space-around">
+        <v-btn v-for="(category, i) in categories" :key="i">
+          {{ category }}
+        </v-btn>
+      </v-col>
+    </v-row>
     <div class="outer-border">
       <div class="mid-border">
         <div class="inner-border">
@@ -16,7 +32,7 @@
           <!-- Page Content -->
           <v-container class="py-15 my-10">
             <v-row>
-              <Dish v-for="(dish, i) in dishes" :key="dish.id" :dish="dishes[i]"/>
+              <Dish v-for="(dish, i) in filteredDishes" :key="dish.id" :dish="filteredDishes[i]"/>
             </v-row>
           </v-container>
         </div>
@@ -34,21 +50,41 @@ export default {
   },
   mounted () {
     this.getDishes()
+    // setTimeout(() => {
+    //   const dishes = this.dishes.map((x, i) => {
+    //     return { ...x, strings: this.criteriaStrings[i] }
+    //   })
+    //   this.dishes = dishes
+    // }, 2000)
   },
   data () {
     return {
       dishes: [],
+      searchTerm: '',
       page: 1
+    }
+  },
+  computed: {
+    filteredDishes () {
+      if (!this.searchTerm) return this.dishes
+      return this.dishes.filter(x => x.strings
+        .toLowerCase()
+        .includes(this.searchTerm.toLowerCase())
+      )
+    },
+    categories () {
+      return [...new Set(this.dishes.map(x => x.Category))]
     }
   },
   methods: {
     async getDishes () {
-      const data = await DishService.getDishes()
-      this.dishes = data.data.dishes
+      const response = await DishService.getDishes()
+      const dishes = await response.data.dishes
+      const criteriaStrings = dishes.map((x, i) => Object.values(x).toString())
+      this.dishes = dishes.map((x, i) => {
+        return { ...x, strings: criteriaStrings[i] }
+      })
       console.log(this.dishes)
-    },
-    next (page) {
-      console.log(page)
     }
   }
 }
@@ -250,5 +286,9 @@ a:hover {
 	bottom: 0;
 	-webkit-transform: scaleY(-1);
   transform: scaleY(-1);
+}
+.search-field {
+  color: #c2c2c2;
+  background-color: transparent !important;
 }
 </style>
