@@ -119,7 +119,6 @@ export default {
         this.dishes = dishes.map((x, i) => {
           return { ...x, strings: criteriaStrings[i] }
         })
-        console.log(this.dishes)
         this.loading = false
       } catch (error) {
         console.log(error)
@@ -127,8 +126,7 @@ export default {
     },
     async logout () {
       try {
-        const response = await AuthService.logout()
-        console.log(response)
+        await AuthService.logout()
         await this.$store.dispatch('logOut')
       } catch (error) {
         console.log(error)

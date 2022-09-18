@@ -111,7 +111,7 @@
 
       <v-snackbar
         v-model="snackbar"
-        :color="'success'"
+        :color="snackbarColor"
         :icon="true"
         title="Success"
       >
@@ -142,6 +142,7 @@ export default {
   data: () => ({
     loading: false,
     snackbarMsg: '',
+    snackbarColor: 'success',
     snackbar: false,
     deleteAction: false,
     dish: {
@@ -178,7 +179,9 @@ export default {
         this.Availability = data.data.dropdowns.Availability
         this.Category = data.data.dropdowns.Category
       } catch (error) {
-        console.log(error)
+        this.snackbar = true
+        this.snackbarColor = 'error'
+        this.snackbarMsg = error.response.data.msg
       }
     },
     async save () {
@@ -190,7 +193,9 @@ export default {
         const dish = this.dish
         await DishService.createDish({ dish: { ...dish, Rating: parseFloat(dish.Rating), Price: parseFloat(dish.Price), WaitTimeMinutes: Math.floor(dish.WaitTimeMinutes) } })
       } catch (error) {
-        console.log(error)
+        this.snackbar = true
+        this.snackbarColor = 'error'
+        this.snackbarMsg = error.response.data.msg
       }
 
       setTimeout(() => {
