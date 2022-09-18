@@ -12,11 +12,6 @@ const port = 9000;
 app.use(cookieParser("mysupersecret"))
 app.use(bodyParser.json());
 
-const corsOptions ={
-    origin:'http://localhost:8081', 
-    credentials:true,           
-    optionSuccessStatus:200
-  }
 app.use(cors({
 origin: function(origin, callback){
     return callback(null, true);

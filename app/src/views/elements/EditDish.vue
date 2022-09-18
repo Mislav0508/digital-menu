@@ -257,10 +257,9 @@ export default {
     async update () {
       this.loading = true
       try {
-        const data = await DishService.updateDish({ dish: this.dish })
+        await DishService.updateDish({ dish: this.dish })
         this.snackbar = true
         this.snackbarMsg = 'Dish was updated successfully.'
-        console.log(data)
 
         setTimeout(() => {
           this.loading = false
