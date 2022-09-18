@@ -40,6 +40,7 @@
             <v-text-field
               v-model="dish.Price"
               :rules="priceRules"
+              type="number"
               dense
               class="pt-4"
               outlined>
@@ -86,7 +87,7 @@
         </v-col>
         <v-col cols="12" sm="6" >
           <v-col cols="12" sm="12" >
-            <v-text-field label="Wait time (mins)" v-model="dish.WaitTimeMinutes" :rules="waitTimeRules">
+            <v-text-field type="number" label="Wait time (mins)" v-model="dish.WaitTimeMinutes" :rules="waitTimeRules">
             </v-text-field>
           </v-col>
         </v-col>
@@ -100,6 +101,7 @@
               color="green darken-1 white--text"
               @click="save"
               large
+              :disabled="!enableBtn"
             >
               Create
             </v-btn>
@@ -155,6 +157,17 @@ export default {
     Availability: [],
     Category: []
   }),
+  computed: {
+    enableBtn: {
+      get () {
+        if (this.dish) {
+          return Object.values({ name: this.dish.Name.length > 0, description: this.dish.Description.length > 0, price: this.dish.Price.length > 0, availability: this.dish.Availability.length > 0, category: this.dish.Category.length > 0, wait: this.dish.WaitTimeMinutes.length > 0 }).every(x => x === true)
+        } else {
+          return false
+        }
+      }
+    }
+  },
   mounted () {
     this.getDropdowns()
   },
@@ -175,8 +188,7 @@ export default {
 
       try {
         const dish = this.dish
-        const data = await DishService.createDish({ dish: { ...dish, Rating: parseFloat(dish.Rating), Price: parseFloat(dish.Price), WaitTimeMinutes: Math.floor(dish.WaitTimeMinutes) } })
-        console.log(data)
+        await DishService.createDish({ dish: { ...dish, Rating: parseFloat(dish.Rating), Price: parseFloat(dish.Price), WaitTimeMinutes: Math.floor(dish.WaitTimeMinutes) } })
       } catch (error) {
         console.log(error)
       }
