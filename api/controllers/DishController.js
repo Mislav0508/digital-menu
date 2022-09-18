@@ -14,6 +14,17 @@ const getDishes = async (req,res) => {
   }
 }
 
+const getDishById = async (req,res) => {
+  const { id } = req.body
+  try {
+    let [dish] = await db.promise().query(`SELECT * FROM dish WHERE IDDish = ${id};`)
+    dish = dish[0]
+    res.status(StatusCodes.OK).json({dish});
+  } catch (error) {
+    res.status(StatusCodes.BAD_REQUEST).json({msg: "Something went wrong"})
+  }
+}
+
 const getDropdowns = async (req,res) => {
   const [dropdowns] = await db.promise().query('SELECT DISTINCT Category, Availability FROM dish;')
   const Availability = [...new Set(dropdowns.map(x => {
@@ -84,6 +95,7 @@ const deleteDish = async (req,res) => {
 
 module.exports = {
   getDishes,
+  getDishById,
   getDropdowns,
   updateDish,
   createDish,

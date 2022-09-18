@@ -89,13 +89,16 @@ export default {
     price: 40
   }),
   methods: {
-    edit () {
-      const dish = this.dish
-      // EditDish accepting params as props
-      this.$router.push({
-        name: 'EditDish',
-        params: { id: this.dish.IDDish, dish: { ...dish, Rating: parseFloat(dish.Rating), Price: parseFloat(dish.Price), WaitTimeMinutes: parseInt(dish.WaitTimeMinutes) } }
-      })
+    async edit () {
+      try {
+        await this.$store.dispatch('setDish', this.dish)
+        this.$router.push({
+          name: 'EditDish',
+          params: { id: this.dish.IDDish }
+        })
+      } catch (error) {
+        console.log(error)
+      }
     }
   }
 }

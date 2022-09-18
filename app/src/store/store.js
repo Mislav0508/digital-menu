@@ -9,7 +9,8 @@ export default new Vuex.Store({
   state: {
     token: null,
     user: null,
-    isUserLoggedIn: false
+    isUserLoggedIn: false,
+    dish: {}
   },
   mutations: {
     setToken (state, token) {
@@ -27,6 +28,9 @@ export default new Vuex.Store({
       state.user = null
       state.token = null
       state.isUserLoggedIn = false
+    },
+    setDish (state, dish) {
+      state.dish = dish
     }
   },
   actions: {
@@ -38,6 +42,9 @@ export default new Vuex.Store({
     },
     logOut ({ commit }) {
       commit('logOut')
+    },
+    setDish ({ commit }, user) {
+      commit('setDish', user)
     }
   }
 })

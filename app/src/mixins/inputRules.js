@@ -3,15 +3,15 @@ export default {
     return {
       nameRules: [
         v => !!v || 'Name is required',
-        v => v.length <= 50 || 'Name must be less than 50 characters'
+        v => v.length <= 50 || 'Name should be less than 50 characters'
       ],
       descriptionRules: [
         v => !!v || 'Description is required',
-        v => v.length <= 200 || 'Name must be less than 200 characters'
+        v => v.length <= 200 || 'Name should be less than 200 characters'
       ],
       priceRules: [
         v => !!v || 'Price is required',
-        v => v <= 500 || 'Price must be less than 500',
+        v => v <= 500 || 'Price should be less than 500',
         v => v > 0 || 'Price must be more than 0'
       ],
       required: [
@@ -19,7 +19,8 @@ export default {
       ],
       waitTimeRules: [
         v => !!v || 'Wait time is required',
-        v => v <= 100 || 'Wait time must be less than 100 minutes'
+        v => v <= 100 || 'Wait time should be less than 100 minutes',
+        v => v > 0 || 'Wait time must be more than 0'
       ],
       passwordRules: [
         v => !!v || 'this field is required',

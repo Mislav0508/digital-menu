@@ -160,9 +160,13 @@ export default {
   },
   methods: {
     async getDropdowns () {
-      const data = await DishService.getDropdowns()
-      this.Availability = data.data.dropdowns.Availability
-      this.Category = data.data.dropdowns.Category
+      try {
+        const data = await DishService.getDropdowns()
+        this.Availability = data.data.dropdowns.Availability
+        this.Category = data.data.dropdowns.Category
+      } catch (error) {
+        console.log(error)
+      }
     },
     async save () {
       this.loading = true
@@ -171,7 +175,7 @@ export default {
 
       try {
         const dish = this.dish
-        const data = await DishService.createDish({ dish: { ...dish, Rating: parseFloat(dish.Rating), Price: parseFloat(dish.Price), WaitTimeMinutes: parseInt(dish.WaitTimeMinutes) } })
+        const data = await DishService.createDish({ dish: { ...dish, Rating: parseFloat(dish.Rating), Price: parseFloat(dish.Price), WaitTimeMinutes: Math.floor(dish.WaitTimeMinutes) } })
         console.log(data)
       } catch (error) {
         console.log(error)

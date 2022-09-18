@@ -8,7 +8,7 @@
     </v-row>
     <v-row class="justify-center pb-15">
       <v-col cols="12" sm="12" class="d-flex justify-space-around flex-wrap">
-        <v-btn class="my-5 white--text" v-for="(category, i) in categories" :key="i" @click="searchTerm = category" color="#b4a8a8">
+        <v-btn class="my-5 black--text" v-for="(category, i) in categories" :key="i" @click="searchTerm = category" color="#b4a8a8">
           {{ category }}
         </v-btn>
       </v-col>
@@ -46,7 +46,7 @@
           <img class="vertical-decoration bottom" src="https://i.ibb.co/JRTK9z4/horizontally-centered-vertical-decoration.png"/>
 
           <!-- Page Content -->
-          <v-container class="py-15 my-10">
+          <v-container class="py-15 my-10 d-flex">
             <v-row>
               <transition-group name="fade" class="d-flex flex-wrap">
                 <Dish v-for="(dish, i) in filteredDishes" :key="dish._id" :dish="filteredDishes[i]"/>
@@ -300,5 +300,15 @@ a:hover {
 	bottom: 0;
 	-webkit-transform: scaleY(-1);
   transform: scaleY(-1);
+}
+.search-field {
+  color: #c2c2c2;
+  background-color: transparent !important;
+}
+.fade-enter-active, .fade-leave-active {
+  transition: all .5s ease-in-out;
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+  opacity: 0;
 }
 </style>

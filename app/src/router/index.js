@@ -21,8 +21,7 @@ const routes = [
   {
     path: '/edit-dish/:id',
     name: 'EditDish',
-    component: EditDish,
-    props: true
+    component: EditDish
   },
   {
     path: '/create-dish',

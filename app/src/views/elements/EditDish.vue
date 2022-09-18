@@ -16,7 +16,7 @@
 
       <!-- 1: Name -->
       <v-text-field
-        v-model="property.Name"
+        v-model="dish.Name"
         :rules="nameRules"
         class="pa-4"
         outlined
@@ -26,7 +26,7 @@
       <!-- 2: Description -->
       <v-container>
         <v-textarea
-          v-model="property.Description"
+          v-model="dish.Description"
           :rules="descriptionRules"
           outlined
           label="Description"
@@ -41,7 +41,7 @@
           </v-col>
           <v-col cols="6" sm="6" class="d-flex align-center justify-center">
             <v-rating
-              v-model="property.Rating"
+              v-model="dish.Rating"
               color="amber"
               dense
               half-increments
@@ -50,7 +50,7 @@
             ></v-rating>
           </v-col>
 
-          <v-col cols="2" sm="2" class="pl-0"><h3>{{ property.Rating }}</h3></v-col>
+          <v-col cols="2" sm="2" class="pl-0"><h3>{{ dish.Rating }}</h3></v-col>
 
         </v-row>
         <!-- 4: Price -->
@@ -60,7 +60,8 @@
           </v-col>
           <v-col cols="12" sm="3">
             <v-text-field
-              v-model="property.Price"
+              type="number"
+              v-model="dish.Price"
               :rules="priceRules"
               dense
               class="pt-4"
@@ -76,13 +77,12 @@
       <v-card-title class="py-0 text-center">
         <v-col cols="12" sm="12" class="pb-0">
           <v-select
-            v-model="property.Availability"
+            v-model="dish.Availability"
             :rules="required"
             :items="Availability"
             label="Time of day"
             solo
             dense
-            clearable
           ></v-select>
         </v-col>
       </v-card-title>
@@ -91,7 +91,7 @@
       <v-card-title class="py-0 text-center">
         <v-col cols="12" sm="12" class="pb-0">
           <v-select
-            v-model="property.Category"
+            v-model="dish.Category"
             :rules="required"
             :items="Category"
             solo
@@ -105,14 +105,14 @@
         <!-- 7: Sold out -->
         <v-col cols="12" sm="6" class="d-flex flex-column align-center justify-center">
           <v-checkbox
-            v-model="property.SoldOut"
+            v-model="dish.SoldOut"
             label="Sold out"
           ></v-checkbox>
         </v-col>
         <!-- 8: Wait time -->
         <v-col cols="12" sm="6" >
           <v-col cols="12" sm="12" >
-            <v-text-field label="Wait time (mins)" v-model="property.WaitTimeMinutes" :rules="waitTimeRules">
+            <v-text-field type="number" label="Wait time (mins)" v-model="dish.WaitTimeMinutes" :rules="waitTimeRules">
             </v-text-field>
           </v-col>
         </v-col>
@@ -134,10 +134,11 @@
             <v-btn
               class="mb-5"
               color="green darken-1 white--text"
-              @click="save"
+              @click="update"
               large
+              :disabled="!enableBtn"
             >
-              Save
+              update
             </v-btn>
           </v-row>
         </v-container>
@@ -172,7 +173,7 @@
     >
       <v-card>
         <v-card-text class="pa-12">
-          <h3 >Are you sure you want to delete {{ property.Name }} ?</h3>
+          <h3 >Are you sure you want to delete {{ dish.Name }} ?</h3>
         </v-card-text>
 
         <v-divider></v-divider>
@@ -205,13 +206,8 @@ import inputRules from '@/mixins/inputRules'
 export default {
   name: 'EditDish',
   mixins: [inputRules],
-  props: {
-    dish: {
-      type: Object
-    }
-  },
   mounted () {
-    this.getDropdowns()
+    this.getDishById()
   },
   data: () => ({
     loading: false,
@@ -219,51 +215,77 @@ export default {
     snackbar: false,
     deleteAction: false,
     Availability: [],
-    Category: []
+    Category: [],
+    dish: {
+      Name: '',
+      Description: '',
+      Rating: 0,
+      Price: 0,
+      Availability: '',
+      Category: '',
+      SoldOut: '',
+      WaitTimeMinutes: 0
+    }
   }),
   computed: {
-    property: {
+    enableBtn: {
       get () {
-        return this.dish
+        if (this.dish) {
+          return Object.values({ name: this.dish.Name.length > 0, description: this.dish.Description.length > 0, price: this.dish.Price > 0, wait: this.dish.WaitTimeMinutes > 0 }).every(x => x === true)
+        } else {
+          return false
+        }
       }
     }
   },
   methods: {
-    async getDropdowns () {
-      const data = await DishService.getDropdowns()
-      this.Availability = data.data.dropdowns.Availability
-      this.Category = data.data.dropdowns.Category
+    async getDishById () {
+      try {
+        const response = await DishService.getDropdowns()
+        this.Availability = response.data.dropdowns.Availability
+        this.Category = response.data.dropdowns.Category
+        const data = await DishService.getDishById({ id: this.$route.params.id })
+        const dish = data.data.dish
+        this.dish = { ...dish, Rating: parseFloat(dish.Rating), Price: parseFloat(dish.Price), WaitTimeMinutes: Math.floor(dish.WaitTimeMinutes) }
+      } catch (error) {
+        console.log(error)
+      }
     },
-    async save () {
+    async update () {
       this.loading = true
-      this.snackbarMsg = 'Dish was successfully deleted.'
-      this.snackbar = true
+      try {
+        const data = await DishService.updateDish({ dish: this.dish })
+        this.snackbar = true
+        this.snackbarMsg = 'Dish was updated successfully.'
+        console.log(data)
 
-      const data = await DishService.updateDish({ dish: this.property })
-      console.log(data)
-
-      setTimeout(() => {
-        this.loading = false
-        this.snackbar = false
-      }, 2000)
+        setTimeout(() => {
+          this.loading = false
+          this.snackbar = false
+        }, 2000)
+      } catch (error) {
+        console.log(error)
+      }
     },
     confirmDelete () {
       this.deleteAction = true
     },
     async deleteDish () {
       this.loading = true
-      this.snackbarMsg = 'Dish was created successfully!'
       this.snackbar = true
-
-      const data = await DishService.deleteDish({ data: { _id: this.property._id } })
-      console.log(data)
-
-      setTimeout(() => {
-        this.loading = false
-        this.snackbar = false
-        this.$router.push({ name: 'Dishes' })
-      }, 2000)
-      this.deleteAction = false
+      try {
+        const data = await DishService.deleteDish({ data: { _id: this.dish._id } })
+        this.snackbarMsg = 'Dish was deleted successfully!'
+        console.log(data)
+        setTimeout(() => {
+          this.loading = false
+          this.snackbar = false
+          this.$router.push({ name: 'Home' })
+        }, 2000)
+        this.deleteAction = false
+      } catch (error) {
+        console.log(error)
+      }
     }
   }
 }
