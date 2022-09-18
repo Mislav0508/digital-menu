@@ -56,6 +56,9 @@
         </div>
       </div>
     </div>
+    <div v-if="position > 20" class="up-arrow-container" @click="scrollToTop">
+      <i class="up-arrow "></i>
+    </div>
   </v-container>
   <v-container v-else>
     <h1 class="text-center">Loading...</h1>
@@ -73,11 +76,15 @@ export default {
   components: {
     Dish
   },
+  beforeMount  () {
+    window.addEventListener('scroll', this.checkPosition)
+  },
   mounted () {
     this.getDishes()
   },
   data () {
     return {
+      position: 0,
       loading: true,
       dishes: [],
       searchTerm: '',
@@ -126,6 +133,16 @@ export default {
       } catch (error) {
         console.log(error)
       }
+    },
+    checkPosition () {
+      this.position = window.pageYOffset
+    },
+    scrollToTop () {
+      window.scroll({
+        top: 0,
+        left: 0,
+        behavior: 'smooth'
+      })
     }
   }
 }
@@ -310,5 +327,28 @@ a:hover {
 }
 .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
   opacity: 0;
+}
+/* ARROW UP */
+.up-arrow-container{
+  bottom: 1.5vh;
+  right: 4vw;
+  position: fixed;
+  padding: 1rem 1.7rem 1.4rem 1rem;
+  cursor: pointer;
+  transition: all 0.3s linear;
+  background: rgba(251, 140, 0, 0.4);
+  border-radius: 10px;
+  z-index: 9999;
+}
+.up-arrow{
+  border: solid white;
+  border-width: 0 3px 3px 0;
+  display: inline-block;
+  padding: 0.3rem;
+  position: fixed;
+  cursor: pointer;
+  z-index: 5;
+  transition: all 0.3s linear;
+  transform: rotate(-135deg);
 }
 </style>
