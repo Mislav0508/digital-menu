@@ -27,9 +27,11 @@
             color="black"
             clearable
           ></v-text-field>
-          <v-btn v-if="$store.state.user" class="ml-4 white--text" color="success" @click="$router.push({ name: 'CreateDish' })">add dish
-            <v-icon class="ml-4">{{ icons.mdiPlusCircle }}</v-icon>
-          </v-btn>
+          <transition appear name="fade">
+            <v-btn v-if="$store.state.user" class="ml-4 white--text" color="success" @click="$router.push({ name: 'CreateDish' })">add dish
+              <v-icon class="ml-4">{{ icons.mdiPlusCircle }}</v-icon>
+            </v-btn>
+          </transition>
         </v-card>
       </v-col>
     </v-row>
@@ -46,7 +48,9 @@
           <!-- Page Content -->
           <v-container class="py-15 my-10">
             <v-row>
-              <Dish v-for="(dish, i) in filteredDishes" :key="dish.id" :dish="filteredDishes[i]"/>
+              <transition-group name="fade" class="d-flex flex-wrap">
+                <Dish v-for="(dish, i) in filteredDishes" :key="dish._id" :dish="filteredDishes[i]"/>
+              </transition-group>
             </v-row>
           </v-container>
         </div>
@@ -310,5 +314,11 @@ a:hover {
 .search-field {
   color: #c2c2c2;
   background-color: transparent !important;
+}
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .5s;
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+  opacity: 0;
 }
 </style>
