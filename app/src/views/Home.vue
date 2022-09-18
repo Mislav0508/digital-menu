@@ -131,7 +131,7 @@ export default {
 }
 </script>
 
-<style >
+<style scoped>
 :root {
 	--skintone-color: #DE9B72;
 	--dark-color: #3A3D3E;
@@ -146,16 +146,6 @@ body {
   margin: 0;
   min-height: 100vh;
 }
-
-/* .body {
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  flex-direction: column;
-  background-size: 140%!important;
-  background-repeat: no-repeat !important;
-  background-position: center !important;
-} */
 
 @media (min-width: 992px) {
 	.body {
@@ -310,15 +300,5 @@ a:hover {
 	bottom: 0;
 	-webkit-transform: scaleY(-1);
   transform: scaleY(-1);
-}
-.search-field {
-  color: #c2c2c2;
-  background-color: transparent !important;
-}
-.fade-enter-active, .fade-leave-active {
-  transition: opacity .5s;
-}
-.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
-  opacity: 0;
 }
 </style>

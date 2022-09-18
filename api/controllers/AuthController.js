@@ -33,6 +33,7 @@ const login = async (req,res) => {
   
     res.status(StatusCodes.OK).json({ user: tokenUser }); 
   } catch (error) {
+    console.log(error);
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).send({msg: error});
   }
 }
