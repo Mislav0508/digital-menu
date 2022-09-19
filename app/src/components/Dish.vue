@@ -91,7 +91,6 @@ export default {
   methods: {
     async edit () {
       try {
-        await this.$store.dispatch('setDish', this.dish)
         this.$router.push({
           name: 'EditDish',
           params: { id: this.dish.IDDish }
